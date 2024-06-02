@@ -4,15 +4,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Firestore, getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCqXGZrlJJKrKF25hS20icHgewjXCcIzNo",
-  authDomain: "pennyplate-14a94.firebaseapp.com",
-  databaseURL: "https://pennyplate-14a94-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "pennyplate-14a94",
-  storageBucket: "pennyplate-14a94.appspot.com",
-  messagingSenderId: "902389742938",
-  appId: "1:902389742938:web:57f120fabee5c4b7bf0763"
+  apiKey: "AIzaSyCQXTZyknU1f75dKcAW5SSuNVoK0jdove8",
+  authDomain: "pennyplate2.firebaseapp.com",
+  projectId: "pennyplate2",
+  storageBucket: "pennyplate2.appspot.com",
+  messagingSenderId: "991358836796",
+  appId: "1:991358836796:web:bc593727da2b19ca71a339",
+  measurementId: "G-HM04JBS1X2"
 };
-
 let app;
 let auth;
 
