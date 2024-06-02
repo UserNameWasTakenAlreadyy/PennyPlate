@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, SafeAreaView, Dimensions } from 'react-native';
+import { StyleSheet, SafeAreaView, Dimensions } from 'react-native';
 import Navigation from './src/Navigation/Navigation';
 
 export default function App() {
