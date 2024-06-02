@@ -11,8 +11,15 @@ import Colors from '../../constants/Colors';
 import MerchantMainScreen from "../screens/MerchantMainScreen";
 import { onAuthStateChanged } from "firebase/auth";
 import AddFoodItemScreen from "../screens/AddFoodItemScreen";
+import UpdateFoodScreen from "../screens/UpdateFoodScreen";
 
 const Stack = createNativeStackNavigator();
+const foodTemp = {
+    id: "chicken rice",
+    description: "yummy",
+    price: "5",
+    halal: "no"
+}
 
 function Navigation() {
     const [isSignedIn, setIsSignedIn] = useState(null);
@@ -42,6 +49,9 @@ function Navigation() {
                     <>
                     <Stack.Screen name="Merchant Main Screen" component={MerchantMainScreen} />
                     <Stack.Screen name="Add Food Item" component={AddFoodItemScreen} />
+                    <Stack.Screen name="Update Food Item" component={UpdateFoodScreen} initialParams={{
+                        selectedFoodObj: foodTemp
+                    }}/>
                     </>
 
                 ) : (

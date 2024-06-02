@@ -1,42 +1,29 @@
 import { StyleSheet, Text, View, ScrollView, Dimensions, Alert } from "react-native";
-import Colors from "../../constants/Colors";
 import { auth, db } from "../../utils/firebase";
-import { collection, addDoc, setDoc, doc, getDoc, getDocs } from "firebase/firestore";
+import { setDoc, doc} from "firebase/firestore";
 import CustomButton from "../components/CustomButtons/CustomButton";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useState } from "react";
 import CustomInput from "../components/Custom Inputs/CustomInput";
-import { TextInput } from "react-native-paper";
 
 
-
-
-function AddFoodItemScreen({route}) {
+function UpdateFoodScreen({route}) {
+    const user = auth.currentUser;
     const navigation = useNavigation();
-    const [foodName, setFoodName] = useState('');
     const [foodDescription, setFoodDescription] = useState('');
     const [foodPrice, setFoodPrice] = useState('');
     const [foodHalal, setFoodHalal] = useState('');
-    const user = auth.currentUser;
-    const { refreshFoodItems } = route.params;
+    const { selectedFoodObj, refreshFoodItems } = route.params;
 
-    //fields in doc() should be handled dynamically later on
-    const back = () => {
-        navigation.navigate('Merchant Main Screen');
-    }
-
-
-    //add function should also check if it is already inside database
-    const addFoodItem = async () => {
+    const updateFoodItems = async () => {
         try {
-            const name = foodName
             const newFoodItem = {
-                description: foodDescription,
-                price: foodPrice,
-                halal: foodHalal
+                description: foodDescription ? foodDescription : selectedFoodObj.foodDescription,
+                price: foodPrice ? foodPrice : selectedFoodObj.foodPrice,
+                halal: foodHalal ? foodHalal : selectedFoodObj.foodHalal
             }
-            await setDoc(doc(db, user.displayName, name), newFoodItem);
-            Alert.alert(title="Food Added!");
+            await setDoc(doc(db, user.displayName, selectedFoodObj.foodId), newFoodItem);
+            Alert.alert(title="Food Updated!");
             refreshFoodItems();
             navigation.navigate('Merchant Main Screen');
         } catch (error) {
@@ -44,24 +31,28 @@ function AddFoodItemScreen({route}) {
         }
     }
 
+
+    //fields in doc() should be handled dynamically later on
+    const back = () => {
+        navigation.navigate('Merchant Main Screen');
+    }
+
+
+
     return (
         <ScrollView showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.bgroot} >
             <View style={styles.root}>
 
                 <View style={styles.titleContainer}>
-                    <Text style={styles.title}>Add Food</Text>
+                    <Text style={styles.title}>Update Food</Text>
                 </View>
 
+                <CustomInput placeholder={selectedFoodObj.foodDescription} value={foodDescription} setValue={(text) =>  setFoodDescription(text)} />
+                <CustomInput placeholder={selectedFoodObj.foodPrice} value={foodPrice} setValue={(text) => setFoodPrice(text)}/>
+                <CustomInput placeholder={selectedFoodObj.foodHalal} value={foodHalal} setValue={(text) => setFoodHalal(text)}/>
 
-                <CustomInput placeholder='Food Name' value={foodName} setValue={(text) => setFoodName(text)} />
-                <CustomInput placeholder='Food Description' value={foodDescription} setValue={(text) => setFoodDescription(text)} />
-                <CustomInput placeholder='Price' value={foodPrice} setValue={(text) => setFoodPrice(text)}/>
-                <CustomInput placeholder='Halal' value={foodHalal} setValue={(text) => setFoodHalal(text)}/>
-
-
-
-                <CustomButton onPress={addFoodItem} text="Add" type='Primary' />
+                <CustomButton onPress={updateFoodItems} text="Update" type='Primary' />
                 <CustomButton onPress={back} text="Cancel" type='Primary' />
 
 
@@ -72,7 +63,7 @@ function AddFoodItemScreen({route}) {
     );
 }
 
-export default AddFoodItemScreen;
+export default UpdateFoodScreen;
 
 
 const styles = StyleSheet.create({

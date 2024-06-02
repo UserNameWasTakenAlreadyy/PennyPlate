@@ -5,7 +5,7 @@ import { useState } from "react";
 import Colors from "../../constants/Colors";
 import background from '../../assets/images/backgroundSignUp.jpg'
 import { useNavigation } from "@react-navigation/native";
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
 import { auth } from "../../utils/firebase";
 import CustomIndicator from "../components/Custom Indicator/CustomIndicator";
 
@@ -18,7 +18,7 @@ function SignUpScreen() {
     const [passwordRepeat, setPasswordRepeat] = useState('');
     const [loading, setLoading] = useState(false);
 
-    //functions to be implemented later
+    //function to pass email, password and username(as display name) to firebase authentication
     const onRegisterPressed = async () => {
         if (password !== passwordRepeat) {
             Alert.alert('Error', 'Passwords do not match');
@@ -33,20 +33,19 @@ function SignUpScreen() {
 
         try {
             const { user } = await createUserWithEmailAndPassword(auth, email, password);
+            await updateProfile(user, { displayName: username });
+            await user.reload();
             await sendEmailVerification(user);
-            Alert.alert('Success', 'Verification email sent. Please check your inbox.');
+            Alert.alert('Success', 'Sign up complete!');
         } catch (error) {
             console.log(error);
             Alert.alert('Error', error.message);
         
         } finally {
             setLoading(false);
-        }
-
-        
-
-        
+        } 
     };
+
     const onSignIn = () => {
         navigation.navigate('Sign In')
     };

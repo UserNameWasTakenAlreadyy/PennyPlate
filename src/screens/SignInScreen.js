@@ -3,7 +3,6 @@ import Logo from '../../assets/images/FoodLogo.png'
 import CustomInput from '../components/Custom Inputs/CustomInput';
 import CustomButton from "../components/CustomButtons/CustomButton";
 import { useState } from "react";
-import Colors from "../../constants/Colors";
 import { useNavigation } from "@react-navigation/native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../utils/firebase";
@@ -16,11 +15,12 @@ function SignInScreen() {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
+
+    //function to handle sign in
     const onSignInPress = async () => {
         if (loading) {
             return;
         }
-
         setLoading(true);
         try {
             const userCredential = await signInWithEmailAndPassword(auth, username, password);
@@ -34,6 +34,8 @@ function SignInScreen() {
         }
 
     };
+
+    //navigates to forgot password page
     const onForgotPasswordPress = () => {
         navigation.navigate('Forgot Password');
     };
@@ -43,11 +45,13 @@ function SignInScreen() {
         console.log('sign in');
     };
 
+    //navigates to sign up page
     const onSignUp = () => {
         navigation.navigate('Sign Up');
     };
 
 
+    //to handle loading indicator
     const loadingIndicator = loading ? <CustomIndicator/> : <CustomButton onPress={onSignInPress} text={loading ? 'Loading...' : 'Sign In'} type='Primary' />
 
 

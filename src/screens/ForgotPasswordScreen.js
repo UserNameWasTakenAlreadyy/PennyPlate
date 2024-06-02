@@ -47,9 +47,6 @@ function ForgotPassWordScreen() {
                     <CustomButton onPress={onSendPress} text='Send' type='Primary' />
                     <CustomButton onPress={onSignInPress} text="Back to Sign In" type='Tertiary' />    
 
-
-
-
                 </View>
             </ImageBackground>
 
