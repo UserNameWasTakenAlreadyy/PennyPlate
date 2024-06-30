@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "RNCourse",
-    "slug": "RNCourse",
+    "name": "PennyPlate",
+    "slug": "pennyplate",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,17 +17,29 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.pennyplate.PennyPlate"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "softwareKeyboardLayoutMode": "pan"
+      "softwareKeyboardLayoutMode": "pan",
+      "package": "com.pennyplate.PennyPlate",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCz-QhQolVqCt00mXiX_3HfwefFmpnRYoQ"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "09387603-f521-4c76-ae1e-6843f64b1b98"
+      }
     }
   }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "991358836796",
+    "project_id": "pennyplate2",
+    "storage_bucket": "pennyplate2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991358836796:android:1326a68662237f8371a339",
+        "android_client_info": {
+          "package_name": "nus.orbital.pennyplate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnfqgW_tr7YgzPol5aJr2V5o1e9xxhNXk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
