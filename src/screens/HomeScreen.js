@@ -6,15 +6,14 @@ import { useState } from "react";
 import Colors from "../../constants/Colors";
 import { useNavigation } from "@react-navigation/native";
 
-function SignInScreen() {
+function HomeScreen() {
     const navigation = useNavigation();
     const { height } = useWindowDimensions();
     const onSignInPressUser = () => {
-        //implement later on
-        console.log('user')
+        navigation.navigate('Sign In', {userType: 'user'});
     };
     const onSignInPressMerchant = () => {
-        navigation.navigate('Sign In');
+        navigation.navigate('Sign In', {userType: 'merchant'});
     };
 
 
@@ -27,13 +26,14 @@ function SignInScreen() {
                     resizeMode="contain" />
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>PennyPlate</Text>
+                    <Text style={styles.subtitle}>Sign In As:</Text>
                 </View>
                 <View style={styles.buttonsContainer}>
                     <View style={styles.buttonContainer}>
-                        <CustomButton onPress={onSignInPressUser} text='Sign In As User' type='Primary' />
+                        <CustomButton onPress={onSignInPressUser} text='User' type='Primary' />
                     </View>
                     <View style={styles.buttonContainer}>
-                        <CustomButton onPress={onSignInPressMerchant} text='Sign In As Merchant' type='Primary' />
+                        <CustomButton onPress={onSignInPressMerchant} text='Merchant' type='Primary' />
                     </View>
                 </View>
             </View>
@@ -45,7 +45,7 @@ function SignInScreen() {
     );
 }
 
-export default SignInScreen;
+export default HomeScreen;
 
 
 const styles = StyleSheet.create({
@@ -65,13 +65,19 @@ const styles = StyleSheet.create({
     },
     titleContainer: {
         marginBottom: 20,
+        alignItems: 'center'
 
     },
     buttonsContainer: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignContent: 'space-evenly'
     },
     buttonContainer: {
         padding: 10,
         flex: 1
-    }
+    },
+    subtitle: {
+        fontSize: 20,
+        fontWeight: 'bold'
+    },
 });

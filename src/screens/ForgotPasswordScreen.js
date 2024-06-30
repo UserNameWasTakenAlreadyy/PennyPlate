@@ -8,11 +8,11 @@ import { useNavigation } from "@react-navigation/native";
 import { auth } from "../../utils/firebase";
 import { sendPasswordResetEmail } from "firebase/auth";
 
-function ForgotPassWordScreen() {
-
+function ForgotPassWordScreen({route}) {
+    const { userType } = route.params;
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
-    //functions to be implemented later
+
     const onSendPress = async () => {
         try {
             await sendPasswordResetEmail(auth, email);
@@ -20,11 +20,11 @@ function ForgotPassWordScreen() {
 
         } catch (error) {
             console.log(error);
-            Alert.alert('Error', error.message)
+            Alert.alert('Error', "Incorrect or missing email. " + error.message)
         }
     };
     const onSignInPress = () => {
-        navigation.navigate('Sign In');
+        navigation.navigate('Sign In', { userType: userType });
     };
 
     return (

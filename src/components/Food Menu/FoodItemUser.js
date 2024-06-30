@@ -1,45 +1,18 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Modal, Alert, Image, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Modal, Image, TouchableOpacity } from "react-native";
 import CustomIconButton from "../CustomButtons/CustomIconButton"; // Import the CustomIconButton component
-import { deleteDoc, doc } from "firebase/firestore";
-import { db, auth, storage } from "../../../utils/firebase";
+import { auth } from "../../../utils/firebase";
 import { useNavigation } from "@react-navigation/native";
-import { ref, deleteObject } from 'firebase/storage';
 import Colors from "../../../constants/Colors";
 
 const sampleParagraph = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
 
-function FoodItem({ id, description, price, halal, imageUrl, refreshFoodItems }) {
+function FoodItemUser({ id, description, price, halal, imageUrl, refreshFoodItems }) {
     const navigation = useNavigation();
     const [visible, setVisible] = useState(false);
     const showModal = () => setVisible(true);
     const dismissModal = () => setVisible(false);
     const user = auth.currentUser;
-
-    // Function to delete a food item and associated image from Firebase Storage
-    const deleteFoodItem = async (userId, foodId, imageUrl) => {
-        try {
-            // Delete image from Firebase Storage if imageUrl exists
-            if (imageUrl) {
-                const storageRef = ref(storage, `images/${user.uid}/${foodId}`);
-                await deleteObject(storageRef);
-            }
-
-            // Delete food item document from Firestore
-            await deleteDoc(doc(db, userId, foodId));
-
-            refreshFoodItems(); // Refresh the food items in MerchantMainScreen
-            // Alert and refresh food items
-            Alert.alert("Deleted!");
-            
-        } catch (error) {
-            console.log('Error', error);
-        }
-    };
-
-    const foodObj = {
-        foodId: id, foodDescription: description, foodPrice: price, foodHalal: halal, imageUrl: imageUrl
-    };
 
     return (
         <View style={styles.rootContainer}>
@@ -47,31 +20,21 @@ function FoodItem({ id, description, price, halal, imageUrl, refreshFoodItems })
                 {imageUrl ? (
                     <Image source={{ uri: imageUrl }} style={styles.image} />
                 ) : (
-                    <View style={styles.noImageContainer}>
-                        <Text>No Image</Text>
-                    </View>
+                    <Text>No Image</Text>
                 )}
             </View>
 
             <View style={styles.foodItemContainer}>
-                <View style={styles.headerContainer}>
-                    <Text style={styles.idText}>{id}</Text>
-                    <View style={styles.iconsContainer}>
-                        <View style={styles.iconContainer}>
-                            <CustomIconButton icon='close' onPress={() => deleteFoodItem(user.displayName, id, imageUrl)} />
-                        </View>
-                        <View style={styles.iconContainer}>
-                        <CustomIconButton icon='edit' onPress={() => navigation.navigate("Update Food Item", { selectedFoodObj: foodObj })} />
-                        </View>
-
-                        
+                <View style={{ flex: 1 }}>
+                    <View>
+                        <Text>{id}</Text>
                     </View>
-                </View>
 
-                <Text numberOfLines={3} ellipsizeMode="tail">{description}</Text>
-                <Text onPress={showModal} style={{ color: 'blue', textDecorationLine: 'underline' }}>Click for more info</Text>
+                    <Text numberOfLines={3} ellipsizeMode="tail">{description}</Text>
+                    <Text onPress={showModal} style={{ color: 'blue', textDecorationLine: 'underline' }}>Click for more info</Text>
+                </View>
                 <View style={styles.priceAndHalalContainer}>
-                    <Text style={styles.priceContainer}>Price: {price}</Text>
+                    <Text style={styles.priceConainter}>Price: {price}</Text>
                     <Text style={styles.halalContainer}>Halal: {halal}</Text>
                 </View>
             </View>
@@ -85,7 +48,7 @@ function FoodItem({ id, description, price, halal, imageUrl, refreshFoodItems })
                         </View>
                         <View style={styles.modalParagraphContainer}>
                             <Text style={styles.paragraphText}>
-                                {description}
+                                {sampleParagraph}
                             </Text>
                         </View>
                     </View>
@@ -95,7 +58,7 @@ function FoodItem({ id, description, price, halal, imageUrl, refreshFoodItems })
     );
 }
 
-export default FoodItem;
+export default FoodItemUser;
 
 const styles = StyleSheet.create({
     rootContainer: {
@@ -104,6 +67,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         backgroundColor: Colors.menuMerchant,
         borderColor: Colors.menuMerchantBorder,
+        marginBottom: 10,
     },
     imageContainer: {
         padding: 10,
@@ -114,37 +78,16 @@ const styles = StyleSheet.create({
         height: 100,
         borderRadius: 5,
     },
-    noImageContainer: {
-        width: 100,
-        height: 100,
-        borderRadius: 5,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#aef3da',
-    },
     foodItemContainer: {
         padding: 10,
         flex: 1,
-    },
-    headerContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    idText: {
-        flex: 1,
-    },
-    iconsContainer: {
-        flexDirection: "row",
-    },
-    iconContainer: {
-        padding: 5,
+        justifyContent: 'space-between', // Ensure items are spaced out
     },
     priceAndHalalContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
-    priceContainer: {},
+    priceConainter: {},
     halalContainer: {},
     modalBackground: {
         flex: 1,
@@ -180,10 +123,17 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderColor: '#2b8cc8',
         backgroundColor: '#38bdc2',
-        marginBottom: 20,
+        marginBottom: 20
     },
     paragraphText: {
         color: '#d1fdfe',
-        fontWeight: 'bold',
+        fontWeight: 'bold'
     },
+    iconsContainer: {
+        flexDirection: "row",
+        justifyContent: 'flex-end'
+    },
+    iconContainer: {
+        padding: 5
+    }
 });

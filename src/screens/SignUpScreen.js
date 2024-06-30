@@ -5,18 +5,20 @@ import { useState } from "react";
 import Colors from "../../constants/Colors";
 import background from '../../assets/images/backgroundSignUp.jpg'
 import { useNavigation } from "@react-navigation/native";
-import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
-import { auth } from "../../utils/firebase";
+import { createUserWithEmailAndPassword, sendEmailVerification, signOut, updateProfile } from "firebase/auth";
+import { auth, db } from "../../utils/firebase";
 import CustomIndicator from "../components/Custom Indicator/CustomIndicator";
+import { setDoc, doc, collection } from "firebase/firestore";
 
 
-function SignUpScreen() {
+function SignUpScreen({ route }) {
     const navigation = useNavigation();
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordRepeat, setPasswordRepeat] = useState('');
     const [loading, setLoading] = useState(false);
+    const { userType } = route.params;
 
     //function to pass email, password and username(as display name) to firebase authentication
     const onRegisterPressed = async () => {
@@ -36,18 +38,20 @@ function SignUpScreen() {
             await updateProfile(user, { displayName: username });
             await user.reload();
             await sendEmailVerification(user);
-            Alert.alert('Success', 'Sign up complete!');
+            addToDB();
+            Alert.alert('Success', 'Sign up complete! Please check your inbox for verification!');
+            await signOut(auth); // Sign the user out after registration
+            navigation.navigate('Sign In', { userType });
         } catch (error) {
             console.log(error);
             Alert.alert('Error', error.message);
-        
         } finally {
             setLoading(false);
-        } 
+        }
     };
 
     const onSignIn = () => {
-        navigation.navigate('Sign In')
+        navigation.navigate('Home')
     };
 
     //implement some terms of service page later on
@@ -59,7 +63,20 @@ function SignUpScreen() {
         console.log('sign in');
     };
 
-    const loadingIndicator = loading ? <CustomIndicator/> : <CustomButton onPress={onRegisterPressed} text='Register' type='Primary' />
+    const addToDB = async () => {
+        try {
+            await setDoc(doc(db, "users", username), {
+                username: username,
+                email: email,
+                userType: userType
+            });
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    const loadingIndicator = loading ? <CustomIndicator /> : <CustomButton onPress={onRegisterPressed} text='Register' type='Primary' />
 
 
     return (
@@ -82,7 +99,6 @@ function SignUpScreen() {
                     <CustomInput placeholder='Password' value={password} setValue={(text) => setPassword(text)} secure={true} />
                     <CustomInput placeholder='Confirm password' value={passwordRepeat} setValue={(text) => setPasswordRepeat(text)} secure={true} />
 
-                    
                     {loadingIndicator}
                     <View style={styles.policyContainer}>
                         <Text style={styles.policyText}>By registering, you confirm that you accept
@@ -146,5 +162,5 @@ const styles = StyleSheet.create({
         height: Dimensions.get('window').height,
         width: Dimensions.get('window').width
     },
-    
+
 });
